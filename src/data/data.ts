@@ -1,0 +1,267 @@
+import { Composer, Ticket, AudioFragment, Test, TestQuestion } from '../types';
+
+// Композиторы для ДООП
+export const DOOPComposers: Composer[] = [
+  {
+    id: 'glinka',
+    name: 'М.И. Глинка',
+    years: '1804–1857',
+    portrait: '/images/composers/glinka.jpg',
+    shortBio: 'Основоположник русской классической музыки',
+    biography: `Михаил Иванович Глинка (1804–1857) — основоположник русской классической музыки. Он создал первую русскую национальную оперу, заложил основы русского симфонизма и классического романса.
+
+Ключевые даты:
+- 1804 — рождение
+- 1836 — опера «Иван Сусанин»
+- 1842 — опера «Руслан и Людмила»
+- 1857 — смерть
+
+Значение: Глинка соединил европейскую технику с русским народным мелосом.`,
+    mainGenres: ['Опера', 'Симфоническая музыка', 'Романс'],
+    mainWorks: ['«Иван Сусанин»', '«Руслан и Людмила»', '«Камаринская»', '«Вальс-фантазия»'],
+    worksForExam: ['Опера «Иван Сусанин» (хор «Славься», ария Сусанина)', '«Камаринская»', 'Романс «Я помню чудное мгновенье»'],
+    audioFragments: [
+      {
+        id: 'glinka_slavsya',
+        title: 'Хор «Славься» из оперы «Иван Сусанин»',
+        composer: 'Глинка',
+        path: '/audio/glinka_slavsya.mp3',
+        description: 'Финальный хор из эпилога оперы'
+      },
+      {
+        id: 'glinka_kamarinskaya',
+        title: '«Камаринская»',
+        composer: 'Глинка',
+        path: '/audio/glinka_kamarinskaya.mp3',
+        description: 'Фантазия на две русские народные темы'
+      }
+    ],
+    testQuestions: [
+      {
+        id: 'glinka_1',
+        question: 'В каком году была поставлена опера «Иван Сусанин»?',
+        options: ['1825', '1836', '1842', '1855'],
+        correctAnswer: 1,
+        explanation: 'Опера «Иван Сусанин» была впервые поставлена в 1836 году',
+        type: 'composer'
+      }
+    ],
+    program: 'DOOP',
+    grades: [7, 8]
+  },
+  {
+    id: 'borodin',
+    name: 'А.П. Бородин',
+    years: '1833–1887',
+    portrait: '/images/composers/borodin.jpg',
+    shortBio: 'Композитор и учёный-химик, член «Могучей кучки»',
+    biography: `Александр Порфирьевич Бородин (1833–1887) — русский композитор и учёный-химик, член «Могучей кучки». Сочетал эпический размах с глубокой лирикой.`,
+    mainGenres: ['Опера', 'Симфония', 'Романс'],
+    mainWorks: ['«Князь Игорь»', 'Симфония №2 «Богатырская»', '«Спящая княжна»'],
+    worksForExam: ['Опера «Князь Игорь» (ария Игоря, половецкие пляски)', '«Богатырская» симфония'],
+    audioFragments: [
+      {
+        id: 'borodin_igor',
+        title: 'Ария Игоря из оперы «Князь Игорь»',
+        composer: 'Бородин',
+        path: '/audio/borodin_igor.mp3',
+        description: '«Ни сна, ни отдыха измученной душе»'
+      }
+    ],
+    testQuestions: [
+      {
+        id: 'borodin_1',
+        question: 'Кто завершил оперу «Князь Игорь» после смерти Бородина?',
+        options: ['Мусоргский и Римский-Корсаков', 'Римский-Корсаков и Глазунов', 'Глазунов и Лядов', 'Чайковский и Рубинштейн'],
+        correctAnswer: 1,
+        explanation: 'Оперу завершили Римский-Корсаков и Глазунов',
+        type: 'composer'
+      }
+    ],
+    program: 'DOOP',
+    grades: [7, 8]
+  },
+  {
+    id: 'tchaikovsky',
+    name: 'П.И. Чайковский',
+    years: '1840–1893',
+    portrait: '/images/composers/tchaikovsky.jpg',
+    shortBio: 'Великий русский композитор',
+    biography: `Пётр Ильич Чайковский (1840–1893) — великий русский композитор, дирижёр, педагог.`,
+    mainGenres: ['Опера', 'Балет', 'Симфония', 'Романс'],
+    mainWorks: ['«Евгений Онегин»', '«Лебединое озеро»', '«Щелкунчик»', '«Времена года»'],
+    worksForExam: ['Опера «Евгений Онегин» (ария Ленского, сцена письма)', 'Симфония №1 «Зимние грезы»'],
+    audioFragments: [
+      {
+        id: 'tchaikovsky_lensky',
+        title: 'Ария Ленского из оперы «Евгений Онегин»',
+        composer: 'Чайковский',
+        path: '/audio/tchaikovsky_lensky.mp3',
+        description: '«Куда, куда вы удалились»'
+      }
+    ],
+    testQuestions: [
+      {
+        id: 'tchaikovsky_1',
+        question: 'Какую оперу Чайковского называют «лирическими сценами»?',
+        options: ['«Пиковая дама»', '«Евгений Онегин»', '«Иоланта»', '«Мазепа»'],
+        correctAnswer: 1,
+        explanation: '«Евгений Онегин» — лирические сцены',
+        type: 'composer'
+      }
+    ],
+    program: 'DOOP',
+    grades: [8]
+  }
+];
+
+// Композиторы для ФГТ
+export const FGTComposers: Composer[] = [
+  {
+    id: 'borodin_fgt',
+    name: 'А.П. Бородин',
+    years: '1833–1887',
+    portrait: '/images/composers/borodin.jpg',
+    shortBio: 'Композитор и учёный-химик',
+    biography: `Александр Порфирьевич Бородин (1833–1887) — русский композитор и учёный-химик. Уникальная фигура: великий композитор и одновременно крупный учёный.`,
+    mainGenres: ['Опера', 'Симфония', 'Романс', 'Камерная музыка'],
+    mainWorks: ['«Князь Игорь»', 'Симфония №2 «Богатырская»', '«Спящая княжна»'],
+    worksForExam: ['Опера «Князь Игорь» (ария Игоря, ария Кончака, половецкие пляски)', '«Богатырская» симфония'],
+    audioFragments: [
+      {
+        id: 'borodin_fgt_igor',
+        title: 'Ария Игоря «Ни сна, ни отдыха»',
+        composer: 'Бородин',
+        path: '/audio/borodin_igor.mp3',
+        description: 'Трагическая ария князя в плену'
+      }
+    ],
+    testQuestions: [
+      {
+        id: 'borodin_fgt_1',
+        question: 'Какой голос исполняет партию хана Кончака?',
+        options: ['Тенор', 'Баритон', 'Бас', 'Бас-профундо'],
+        correctAnswer: 2,
+        explanation: 'Партия Кончака написана для баса',
+        type: 'composer'
+      }
+    ],
+    program: 'FGT',
+    grades: [6, 7, 8]
+  },
+  {
+    id: 'rachmaninov',
+    name: 'С.В. Рахманинов',
+    years: '1873–1943',
+    portrait: '/images/composers/rachmaninov.jpg',
+    shortBio: 'Последний великий романтик',
+    biography: `Сергей Васильевич Рахманинов (1873–1943) — русский композитор, пианист и дирижёр, последний великий романтик в русской музыке.`,
+    mainGenres: ['Фортепианная музыка', 'Симфоническая музыка', 'Романс'],
+    mainWorks: ['Концерт №2', '«Вокализ»', 'Прелюдия до-диез минор'],
+    worksForExam: ['Концерт №2 (I часть)', '«Вокализ»', 'Прелюдия до-диез минор'],
+    audioFragments: [
+      {
+        id: 'rachmaninov_concerto',
+        title: 'Концерт №2 — I часть',
+        composer: 'Рахманинов',
+        path: '/audio/rachmaninov_concerto2.mp3',
+        description: 'Восемь «колокольных» аккордов'
+      }
+    ],
+    testQuestions: [
+      {
+        id: 'rachmaninov_1',
+        question: 'В каком году Рахманинов покинул Россию?',
+        options: ['1917', '1918', '1919', '1921'],
+        correctAnswer: 0,
+        explanation: 'После Октябрьской революции 1917 года',
+        type: 'composer'
+      }
+    ],
+    program: 'FGT',
+    grades: [8]
+  }
+];
+
+// Экзаменационные билеты для ДООП
+export const DOOPTickets: Ticket[] = [
+  {
+    id: 'doop_ticket_1',
+    number: 1,
+    question1: 'Расскажите о творчестве М.И. Глинки. Назовите его основные произведения.',
+    answer1: `Михаил Иванович Глинка (1804–1857) — основоположник русской классической музыки. Основные произведения: оперы «Иван Сусанин», «Руслан и Людмила», «Камаринская», романсы.`,
+    question2: 'Охарактеризуйте оперу «Иван Сусанин»: сюжет, главные герои.',
+    answer2: `Опера о подвиге крестьянина Ивана Сусанина в 1613 году. Главные герои: Сусанин (бас), Антонида (сопрано), Ваня (контральто), Собинин (тенор).`,
+    audioFragmentId: 'glinka_slavsya',
+    program: 'DOOP'
+  }
+];
+
+// Аудиофрагменты
+export const AudioFragmentsList: AudioFragment[] = [
+  {
+    id: 'glinka_slavsya',
+    title: 'Хор «Славься»',
+    composer: 'Глинка',
+    path: '/audio/glinka_slavsya.mp3',
+    description: 'Из оперы «Иван Сусанин»'
+  },
+  {
+    id: 'borodin_igor',
+    title: 'Ария Игоря',
+    composer: 'Бородин',
+    path: '/audio/borodin_igor.mp3',
+    description: 'Из оперы «Князь Игорь»'
+  },
+  {
+    id: 'tchaikovsky_lensky',
+    title: 'Ария Ленского',
+    composer: 'Чайковский',
+    path: '/audio/tchaikovsky_lensky.mp3',
+    description: 'Из оперы «Евгений Онегин»'
+  }
+];
+
+// Тесты для ДООП
+export const DOOPTests: Test[] = [
+  {
+    id: 'doop_test_1',
+    title: 'Тест по творчеству М.И. Глинки',
+    questions: [
+      {
+        id: 'q1',
+        question: 'В каком году была поставлена опера «Иван Сусанин»?',
+        options: ['1825', '1836', '1842', '1855'],
+        correctAnswer: 1,
+        explanation: 'Опера была впервые поставлена в 1836 году',
+        type: 'composer'
+      }
+    ],
+    program: 'DOOP',
+    grade: 7
+  }
+];
+
+export const FGTTests: Test[] = [
+  {
+    id: 'fgt_test_1',
+    title: 'Тест по творчеству А.П. Бородина',
+    questions: [
+      {
+        id: 'q1',
+        question: 'Какой голос исполняет партию хана Кончака?',
+        options: ['Тенор', 'Баритон', 'Бас', 'Контральто'],
+        correctAnswer: 2,
+        explanation: 'Партия Кончака написана для баса',
+        type: 'composer'
+      }
+    ],
+    program: 'FGT',
+    grade: 7
+  }
+];
+
+export const Terms = [
+  { term: 'романс', definition: 'Вокальное произведение для голоса с инструментальным сопровождением' },
+  { term: 'опера', definition: 'Музыкально-театральное произведение, где все действующие лица поют' }
+];
