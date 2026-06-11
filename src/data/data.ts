@@ -198,7 +198,7 @@ export const DOOPTickets: Ticket[] = [
 ];
 
 // Экзаменационные билеты для ФГТ
-export const FGTTickets: Ticket[] = [
+export const FGTickets: Ticket[] = [
   {
     id: 'fgt_ticket_1',
     number: 1,
