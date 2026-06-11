@@ -28,40 +28,52 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onComplete }) => {
   const grades = [4, 5, 6, 7, 8];
 
   const handleSubmit = async () => {
-    if (!specialization) {
-      showAlert('Пожалуйста, выберите специализацию');
-      return;
-    }
+  if (!specialization) {
+    showAlert('Пожалуйста, выберите специализацию');
+    return;
+  }
 
-    setLoading(true);
-    hapticFeedback.medium();
+  setLoading(true);
+  hapticFeedback.medium();
 
-    const profile = {
-      telegram_id: user?.id,
-      first_name: user?.first_name,
-      username: user?.username,
-      program,
-      program_ru: program === 'DOOP' ? 'ДООП' : 'ФГТ',
-      specialization,
-      grade,
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
+  // В Telegram берём настоящий id пользователя.
+  // В обычном браузере используем тестовый id, чтобы приложение можно было проверять.
+  const telegramId = user?.id ?? 100000001;
 
-    try {
-      const response = await api.createUser(profile);
-      if (response.success) {
-        hapticFeedback.success();
-        onComplete(profile);
-      } else {
-        showAlert('Ошибка при сохранении профиля');
-      }
-    } catch (error) {
-      showAlert('Ошибка соединения');
-    } finally {
-      setLoading(false);
-    }
+  const profile = {
+    telegram_id: telegramId,
+    first_name: user?.first_name || 'Ученик',
+    username: user?.username || 'demo_user',
+    program,
+    program_ru: program === 'DOOP' ? 'ДООП' : 'ФГТ',
+    specialization,
+    grade,
+    created_at: new Date(),
+    updated_at: new Date(),
   };
+
+  try {
+    // Сначала пробуем сохранить на сервере.
+    // Если сервер пока не настроен, приложение всё равно продолжит работу.
+    const response = await api.createUser(profile);
+
+    if (!response.success) {
+      console.warn('Профиль не сохранён на сервере, используем локальное сохранение');
+    }
+
+    // Главное для MVP: сохраняем локально и переходим дальше.
+    localStorage.setItem('userProfile', JSON.stringify(profile));
+    hapticFeedback.success();
+    onComplete(profile);
+  } catch (error) {
+    console.warn('Ошибка соединения, используем локальное сохранение', error);
+
+    localStorage.setItem('userProfile', JSON.stringify(profile));
+    onComplete(profile);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="profile-page">
