@@ -38,8 +38,12 @@ export function useTelegram() {
   };
 
   const showAlert = (message: string) => {
-    if (tg) tg.showAlert(message);
-  };
+  if (tg) {
+    tg.showAlert(message);
+  } else {
+    window.alert(message);
+  }
+};
 
   const showConfirm = (message: string): Promise<boolean> => {
     return new Promise((resolve) => {
