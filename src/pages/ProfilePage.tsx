@@ -6,114 +6,172 @@ interface ProfilePageProps {
   onComplete: (profile: any) => void;
 }
 
+type Program = 'DOOP' | 'FGT';
+
+type SpecializationOption = {
+  value: string;
+  emoji: string;
+  title: string;
+};
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({ onComplete }) => {
   const { user, showAlert, hapticFeedback } = useTelegram();
-  const [program, setProgram] = useState<'DOOP' | 'FGT'>('DOOP');
+
+  const [program, setProgram] = useState<Program>('DOOP');
   const [specialization, setSpecialization] = useState('');
   const [grade, setGrade] = useState(7);
   const [loading, setLoading] = useState(false);
 
-  const specializations = {
+  const specializations: Record<Program, SpecializationOption[]> = {
     DOOP: [
-      { value: 'instrumentalist', label: '🎹 Инструменталист' },
-      { value: 'vocalist', label: '🎤 Вокалист/Хоровик' },
-      { value: 'folklore', label: '🎭 Фольклор' },
+      {
+        value: 'instrumentalist',
+        emoji: '🎹',
+        title: 'Инструменталист / Хоровик',
+      },
+      {
+        value: 'vocalist',
+        emoji: '🎤',
+        title: 'Вокалист',
+      },
+      {
+        value: 'folklore',
+        emoji: '🎭',
+        title: 'Фольклор',
+      },
     ],
     FGT: [
-      { value: 'instrumentalist', label: '🎹 Инструменталист' },
-      { value: 'vocalist', label: '🎤 Вокалист/Хоровик' },
+      {
+        value: 'instrumentalist',
+        emoji: '🎹',
+        title: 'Инструменталист / Хоровик',
+      },
+      {
+        value: 'vocalist',
+        emoji: '🎤',
+        title: 'Вокалист',
+      },
     ],
   };
 
   const grades = [4, 5, 6, 7, 8];
 
-  const handleSubmit = async () => {
-  if (!specialization) {
-    showAlert('Пожалуйста, выберите специализацию');
-    return;
-  }
+  const handleProgramChange = (selectedProgram: Program) => {
+    setProgram(selectedProgram);
 
-  setLoading(true);
-  hapticFeedback.medium();
-
-  // В Telegram берём настоящий id пользователя.
-  // В обычном браузере используем тестовый id, чтобы приложение можно было проверять.
-  const telegramId = user?.id ?? 100000001;
-
-  const profile = {
-    telegram_id: telegramId,
-    first_name: user?.first_name || 'Ученик',
-    username: user?.username || 'demo_user',
-    program,
-    program_ru: program === 'DOOP' ? 'ДООП' : 'ФГТ',
-    specialization,
-    grade,
-    created_at: new Date(),
-    updated_at: new Date(),
+    // При смене программы сбрасываем специализацию,
+    // потому что у ДООП и ФГТ разные наборы вариантов.
+    setSpecialization('');
   };
 
-  try {
-    // Сначала пробуем сохранить на сервере.
-    // Если сервер пока не настроен, приложение всё равно продолжит работу.
-    const response = await api.createUser(profile);
-
-    if (!response.success) {
-      console.warn('Профиль не сохранён на сервере, используем локальное сохранение');
+  const handleSubmit = async () => {
+    if (!specialization) {
+      showAlert('Пожалуйста, выберите специализацию');
+      return;
     }
 
-    // Главное для MVP: сохраняем локально и переходим дальше.
-    localStorage.setItem('userProfile', JSON.stringify(profile));
-    hapticFeedback.success();
-    onComplete(profile);
-  } catch (error) {
-    console.warn('Ошибка соединения, используем локальное сохранение', error);
+    setLoading(true);
+    hapticFeedback.medium();
 
-    localStorage.setItem('userProfile', JSON.stringify(profile));
-    onComplete(profile);
-  } finally {
-    setLoading(false);
-  }
-};
+    const telegramId = user?.id ?? 100000001;
+
+    const selectedSpecialization = specializations[program].find(
+      (item) => item.value === specialization
+    );
+
+    const profile = {
+      telegram_id: telegramId,
+      first_name: user?.first_name || 'Ученик',
+      username: user?.username || 'demo_user',
+      program,
+      program_ru: program === 'DOOP' ? 'ДООП' : 'ФГТ',
+      specialization,
+      specialization_ru: selectedSpecialization?.title || specialization,
+      grade,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    try {
+      const response = await api.createUser(profile);
+
+      if (!response.success) {
+        console.warn(
+          'Профиль не сохранён на сервере, используем локальное сохранение'
+        );
+      }
+
+      localStorage.setItem('userProfile', JSON.stringify(profile));
+      hapticFeedback.success();
+      onComplete(profile);
+    } catch (error) {
+      console.warn('Ошибка соединения, используем локальное сохранение', error);
+
+      localStorage.setItem('userProfile', JSON.stringify(profile));
+      onComplete(profile);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="profile-page">
       <div className="profile-header">
         <h1>🎵 МУЗЛИТ-РЕПЕТИТОР</h1>
+
         <p>Добро пожаловать, {user?.first_name || 'ученик'}!</p>
-        <p style={{ fontSize: '12px', marginTop: '8px' }}>Готовься к экзамену по русской музыкальной литературе</p>
+
+        <p style={{ fontSize: '12px', marginTop: '8px' }}>
+          Готовься к экзамену по русской музыкальной литературе
+        </p>
       </div>
 
       <div className="profile-form">
         <div className="form-section">
           <h3>Выберите программу обучения</h3>
+
           <div className="program-buttons">
             <button
+              type="button"
               className={`program-btn ${program === 'DOOP' ? 'active' : ''}`}
-              onClick={() => setProgram('DOOP')}
+              onClick={() => handleProgramChange('DOOP')}
             >
-              📚 ДООП
-              <small>Общеразвивающая программа</small>
+              <span className="option-emoji">📚</span>
+              <span className="option-title">ДООП</span>
+              <span className="option-subtitle">
+                Общеразвивающая программа
+              </span>
             </button>
+
             <button
+              type="button"
               className={`program-btn ${program === 'FGT' ? 'active' : ''}`}
-              onClick={() => setProgram('FGT')}
+              onClick={() => handleProgramChange('FGT')}
             >
-              🎓 ФГТ
-              <small>Предпрофессиональная программа</small>
+              <span className="option-emoji">🎓</span>
+              <span className="option-title">ФГТ</span>
+              <span className="option-subtitle">
+                Предпрофессиональная программа
+              </span>
             </button>
           </div>
         </div>
 
         <div className="form-section">
           <h3>Ваша специализация</h3>
+
           <div className="specialization-buttons">
             {specializations[program].map((spec) => (
               <button
+                type="button"
                 key={spec.value}
-                className={`spec-btn ${specialization === spec.value ? 'active' : ''}`}
+                className={`spec-btn ${
+                  specialization === spec.value ? 'active' : ''
+                }`}
                 onClick={() => setSpecialization(spec.value)}
               >
-                {spec.label}
+                <span className="option-emoji">{spec.emoji}</span>
+                <span className="option-title">{spec.title}</span>
               </button>
             ))}
           </div>
@@ -121,9 +179,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onComplete }) => {
 
         <div className="form-section">
           <h3>Ваш класс</h3>
+
           <div className="grade-buttons">
             {grades.map((g) => (
               <button
+                type="button"
                 key={g}
                 className={`grade-btn ${grade === g ? 'active' : ''}`}
                 onClick={() => setGrade(g)}
@@ -135,6 +195,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onComplete }) => {
         </div>
 
         <button
+          type="button"
           className="start-btn"
           onClick={handleSubmit}
           disabled={loading}
