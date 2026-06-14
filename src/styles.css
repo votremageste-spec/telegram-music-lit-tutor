@@ -168,3 +168,227 @@ body {
   .menu-grid { grid-template-columns: 1fr; }
   .composers-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== Tickets Page ===== */
+
+.tickets-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 96px;
+}
+
+.tickets-page h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 4px 0;
+  color: #555;
+  font-size: 15px;
+}
+
+.tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.ticket-card {
+  padding: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ticket-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ticket-number {
+  font-weight: 700;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.ticket-status {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.status-not_started {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.status-learned {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ticket-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ticket-questions p {
+  margin: 0;
+  color: #374151;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.empty-state,
+.loading-container {
+  max-width: 760px;
+  margin: 40px auto;
+  padding: 24px 16px;
+  text-align: center;
+  color: #555;
+}
+
+/* ===== Ticket Detail Page ===== */
+
+.ticket-detail-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 104px;
+}
+
+.ticket-detail-page h1 {
+  margin: 16px 0 20px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.back-button {
+  border: none;
+  border-radius: 12px;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background: #e5e7eb;
+}
+
+.ticket-section {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-section h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.question-text {
+  margin-bottom: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1f2937;
+}
+
+.show-answer-btn {
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.show-answer-btn:hover {
+  background: #1d4ed8;
+}
+
+.answer-content {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+}
+
+.answer-content p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1f2937;
+}
+
+.mark-learned-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  background: #16a34a;
+  color: #ffffff;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mark-learned-btn:hover {
+  background: #15803d;
+}
+
+.mark-learned-btn.learned,
+.mark-learned-btn:disabled {
+  background: #86efac;
+  color: #166534;
+  cursor: default;
+}
+
+/* ===== Mobile adaptation ===== */
+
+@media (max-width: 480px) {
+  .tickets-page,
+  .ticket-detail-page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .tickets-page h1,
+  .ticket-detail-page h1 {
+    font-size: 24px;
+  }
+
+  .ticket-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ticket-card,
+  .ticket-section {
+    border-radius: 14px;
+    padding: 14px;
+  }
+}
