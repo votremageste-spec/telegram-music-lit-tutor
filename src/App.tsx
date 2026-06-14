@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from './firebase';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, db } from './firebase';
 import { useTelegram } from './hooks/useTelegram';
 import { AuthPage } from './pages/AuthPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -140,8 +141,23 @@ function App() {
     };
 
     setUserProfile(profileWithAuth);
-    localStorage.setItem('userProfile', JSON.stringify(profileWithAuth));
-    setAppState({ currentPage: 'main' });
+localStorage.setItem('userProfile', JSON.stringify(profileWithAuth));
+
+if (firebaseUser?.uid) {
+  setDoc(
+    doc(db, 'users', firebaseUser.uid),
+    {
+      ...profileWithAuth,
+      uid: firebaseUser.uid,
+      updated_at: serverTimestamp(),
+    },
+    { merge: true }
+  ).catch((error) => {
+    console.warn('Профиль сохранён локально, но не сохранён в Firestore:', error);
+  });
+}
+
+setAppState({ currentPage: 'main' });
   };
 
   const navigateTo = (page: Page, params?: any) => {
