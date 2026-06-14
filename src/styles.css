@@ -392,3 +392,154 @@ body {
     padding: 14px;
   }
 }
+
+/* ===== Extra mobile fixes for Telegram Mini App ===== */
+
+@media (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .profile-page,
+  .main-page,
+  .tickets-page,
+  .ticket-detail-page {
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 150px;
+    box-sizing: border-box;
+  }
+
+  .profile-page h1,
+  .main-page h1 {
+    font-size: 38px;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .profile-page h2,
+  .main-page h2 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .program-grid,
+  .specialization-grid,
+  .grade-grid,
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .program-btn,
+  .spec-btn,
+  .grade-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 96px;
+    padding: 14px 10px;
+    box-sizing: border-box;
+    font-size: 22px;
+    line-height: 1.25;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+  .program-btn {
+    font-size: 20px;
+  }
+
+  .program-btn span,
+  .spec-btn span,
+  .grade-btn span {
+    display: block;
+  }
+
+  .grade-btn {
+    min-height: 82px;
+    font-size: 24px;
+  }
+
+  .start-btn,
+  .primary-btn,
+  .submit-btn {
+    width: 100%;
+    margin-top: 28px;
+    margin-bottom: 40px;
+    font-size: 24px;
+    line-height: 1.25;
+    padding: 20px 18px;
+    border-radius: 18px;
+    box-sizing: border-box;
+  }
+
+  .tickets-page {
+    padding-top: 40px;
+  }
+
+  .tickets-page h1 {
+    font-size: 34px;
+    line-height: 1.15;
+  }
+
+  .ticket-card {
+    padding: 20px;
+  }
+
+  .ticket-number {
+    font-size: 24px;
+  }
+
+  .ticket-questions p {
+    font-size: 22px;
+    line-height: 1.45;
+  }
+
+  .ticket-status {
+    font-size: 20px;
+    padding: 8px 14px;
+  }
+
+  .ticket-detail-page {
+    padding-top: 56px;
+    padding-bottom: 160px;
+  }
+
+  .ticket-detail-page h1 {
+    font-size: 38px;
+  }
+
+  .ticket-section {
+    padding: 22px;
+  }
+
+  .ticket-section h3 {
+    font-size: 30px;
+  }
+
+  .question-text {
+    font-size: 26px;
+    line-height: 1.45;
+  }
+
+  .show-answer-btn {
+    font-size: 24px;
+    padding: 16px 24px;
+    border-radius: 16px;
+  }
+
+  .answer-content p {
+    font-size: 24px;
+    line-height: 1.6;
+  }
+
+  .mark-learned-btn {
+    font-size: 22px;
+    padding: 18px 20px;
+    margin-bottom: 40px;
+  }
+}
