@@ -6,6 +6,91 @@ export interface ApiResponse<T = any> {
   error?: string;
 }
 
+type LocalProgress = {
+  learnedTickets: string[];
+  testResults: any[];
+  audioResults: any[];
+  updated_at: string;
+};
+
+function getSafeTelegramId(telegramId?: number | null) {
+  return telegramId ?? 100000001;
+}
+
+function getProgressStorageKey(telegramId: number) {
+  return `music_lit_progress_${telegramId}`;
+}
+
+function createEmptyProgress(): LocalProgress {
+  return {
+    learnedTickets: [],
+    testResults: [],
+    audioResults: [],
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function readLocalProgress(telegramId: number): LocalProgress {
+  if (typeof window === 'undefined') {
+    return createEmptyProgress();
+  }
+
+  try {
+    const raw = window.localStorage.getItem(getProgressStorageKey(telegramId));
+
+    if (!raw) {
+      return createEmptyProgress();
+    }
+
+    const parsed = JSON.parse(raw);
+
+    return {
+      ...createEmptyProgress(),
+      ...parsed,
+      learnedTickets: Array.isArray(parsed.learnedTickets)
+        ? parsed.learnedTickets.map(String)
+        : [],
+    };
+  } catch (error) {
+    console.warn('Не удалось прочитать локальный прогресс:', error);
+    return createEmptyProgress();
+  }
+}
+
+function writeLocalProgress(telegramId: number, progress: LocalProgress) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(
+      getProgressStorageKey(telegramId),
+      JSON.stringify(progress)
+    );
+  } catch (error) {
+    console.warn('Не удалось сохранить локальный прогресс:', error);
+  }
+}
+
+function addLearnedTicketLocally(telegramId: number, ticketId: string | number) {
+  const progress = readLocalProgress(telegramId);
+  const ticketIdString = String(ticketId);
+
+  const learnedTickets = Array.from(
+    new Set([...progress.learnedTickets, ticketIdString])
+  );
+
+  const updatedProgress: LocalProgress = {
+    ...progress,
+    learnedTickets,
+    updated_at: new Date().toISOString(),
+  };
+
+  writeLocalProgress(telegramId, updatedProgress);
+
+  return updatedProgress;
+}
+
 export const api = {
   async request<T>(
     endpoint: string,
@@ -52,15 +137,67 @@ export const api = {
   },
 
   // Progress endpoints
-  getProgress(telegramId: number) {
-    return this.request(`/progress/${telegramId}`);
+  async getProgress(telegramId?: number | null) {
+    const safeTelegramId = getSafeTelegramId(telegramId);
+
+    const response = await this.request(`/progress/${safeTelegramId}`);
+
+    if (response.success && response.data) {
+      const serverProgress = response.data as any;
+
+      const normalizedProgress: LocalProgress = {
+        ...createEmptyProgress(),
+        ...serverProgress,
+        learnedTickets: Array.isArray(serverProgress.learnedTickets)
+          ? serverProgress.learnedTickets.map(String)
+          : [],
+        updated_at: new Date().toISOString(),
+      };
+
+      writeLocalProgress(safeTelegramId, normalizedProgress);
+
+      return {
+        success: true,
+        data: normalizedProgress,
+      };
+    }
+
+    // Если сервер прогресса пока не работает,
+    // используем локальный прогресс из браузера / Telegram Mini App.
+    return {
+      success: true,
+      data: readLocalProgress(safeTelegramId),
+    };
   },
 
-  updateProgress(telegramId: number, progressData: any) {
-    return this.request(`/progress/${telegramId}`, {
+  async updateProgress(telegramId: number, progressData: any) {
+    const safeTelegramId = getSafeTelegramId(telegramId);
+    const currentProgress = readLocalProgress(safeTelegramId);
+
+    const updatedProgress: LocalProgress = {
+      ...currentProgress,
+      ...progressData,
+      learnedTickets: Array.isArray(progressData.learnedTickets)
+        ? progressData.learnedTickets.map(String)
+        : currentProgress.learnedTickets,
+      updated_at: new Date().toISOString(),
+    };
+
+    writeLocalProgress(safeTelegramId, updatedProgress);
+
+    const response = await this.request(`/progress/${safeTelegramId}`, {
       method: 'PUT',
-      body: JSON.stringify(progressData),
+      body: JSON.stringify(updatedProgress),
     });
+
+    if (!response.success) {
+      console.warn('Прогресс сохранён локально, но не сохранён на сервере');
+    }
+
+    return {
+      success: true,
+      data: updatedProgress,
+    };
   },
 
   // Tests endpoints
@@ -106,11 +243,30 @@ export const api = {
     return this.request(`/tickets/${ticketId}`);
   },
 
-  markTicketLearned(telegramId: number, ticketId: string) {
-    return this.request('/tickets/learned', {
+  async markTicketLearned(telegramId: number, ticketId: string | number) {
+    const safeTelegramId = getSafeTelegramId(telegramId);
+
+    // Сначала сохраняем локально, чтобы пользователь сразу видел результат.
+    const localProgress = addLearnedTicketLocally(safeTelegramId, ticketId);
+
+    // Потом пробуем сохранить на сервере.
+    // Если серверный маршрут пока не готов, приложение всё равно продолжит работать.
+    const response = await this.request('/tickets/learned', {
       method: 'POST',
-      body: JSON.stringify({ telegramId, ticketId }),
+      body: JSON.stringify({
+        telegramId: safeTelegramId,
+        ticketId: String(ticketId),
+      }),
     });
+
+    if (!response.success) {
+      console.warn('Билет сохранён локально, но не сохранён на сервере');
+    }
+
+    return {
+      success: true,
+      data: localProgress,
+    };
   },
 
   // Composers endpoints
@@ -127,5 +283,5 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ telegramId, composerId, ...result }),
     });
-  }
+  },
 };
